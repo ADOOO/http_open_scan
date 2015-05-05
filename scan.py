@@ -24,11 +24,13 @@ def scan(ipin):
 			socket = urllib2.urlopen(req)
 			content = socket.read()
 			socket.close()
-			'''
-			tmp1 = re.findall('<title>(.*)</title>|<TITLE>(.*)</TITLE>',content)
+			
+			tmp1 = re.findall('<title>(.*)</title>',content)
 			if len(tmp1) != 0:
 				title.append(tmp1[0])
-			'''
+			else:
+				title.append('NULL')
+			
 
 			if content == None:
 				print '%s is down!'%(ipin)
@@ -39,7 +41,7 @@ def scan(ipin):
 			pass
 	except urllib2.URLError:
 		print '%s is down!'%(ipin)
-	return out
+	return out,title
 
 def thscan():
 	for i in range(254):
@@ -50,19 +52,20 @@ def thscan():
 def outfile():
 	thscan()
 	lenout = len(out)
+	lentitle = len(title)
+	#print title
+	#print lentitle
 	if lenout != 0:
 		file = open(ipinput+'.html','w')
 		file.close()
 		file = open(ipinput+'.html','a+')
-		try:
+		
+		for i in range(lenout):
+			file.write('<a href="'+out[i]+'" target="_blank">'+out[i]+'</a>')
+			file.write(title[i])
+			file.write('</br>')
+		file.close
 
-			for i in range(lenout):
-				file.write('<a href="'+out[i]+'" target="_blank">'+out[i]+'</a>')
-				#file.write(title[i])
-				file.write('</br>')
-			file.close
-		except:
-			pass
 	else:
 		print 'None one is up!'
 
